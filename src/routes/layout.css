@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@plugin 'flowbite/plugin';
+@custom-variant dark (&:where(.dark, .dark *));
+/* ... */
+@source "../../node_modules/flowbite-svelte/dist";
+@source "../../node_modules/flowbite-svelte-icons/dist";
+
+
+.cell-input::-webkit-outer-spin-button,
+.cell-input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.cell-input {
+    -moz-appearance:textfield; /* Firefox */
+}
