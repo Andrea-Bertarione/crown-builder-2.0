@@ -13,14 +13,26 @@ const ABILITIES: AbilityKey[] = [
 
 // @ts-ignore
 export class AbilityScore implements AbilityWithModifier {
+    name: AbilityKey;
     score = $state(10);
+    characterRef: Character;
+
+    computed = $derived.by(() => {
+        return this.score + getRaceModifier(this.characterRef, this.name) + getSubraceModifier(this.characterRef, this.name) + getAsiModifier(this.characterRef, this.name);
+    });
+
+    get computedModifier(): number {
+        return Math.floor((this.computed - 10) / 2);
+    }
 
     get modifier(): number {
         return Math.floor((this.score - 10) / 2);
     }
 
-    constructor(baseScore: number = 10) {
+    constructor(name: AbilityKey, baseScore: number = 10, character: Character) {
+        this.name = name;
         this.score = baseScore;
+        this.characterRef = character;
     }
 }
 
@@ -58,39 +70,4 @@ function getAsiModifier(character: Character, ability: AbilityKey): number {
     return asi
         .filter(b => b.ability === ability)
         .reduce((sum, b) => sum + b.value, 0);
-}
-
-// Main computed map
-export function createComputedAbilities(character: Character) {
-    const computed = $derived.by(() => {
-        return ABILITIES.reduce((acc, ability) => {
-            const base = character.abilityScores[ability].score;
-            const race = getRaceModifier(character, ability);
-            const subrace = getSubraceModifier(character, ability);
-            const asi = getAsiModifier(character, ability);
-
-            const total = base + race + subrace + asi;
-            const modifier = Math.floor((total - 10) / 2);
-
-            acc[ability] = {
-                base,
-                race,
-                subrace,
-                asi,
-                total,
-                modifier
-            };
-
-            return acc;
-        }, {} as Record<AbilityKey, {
-            base: number;
-            race: number;
-            subrace: number;
-            asi: number;
-            total: number;
-            modifier: number;
-        }>);
-    });
-
-    return computed;
 }

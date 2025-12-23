@@ -26,6 +26,17 @@ interface ArmorClass {
 
     // For UI: show what's being added
     getBreakdown(): { label: string; value: number }[]; // $derived
+
+    equipArmor(armor: Armor): void;
+
+    // Helper: Equip shield
+    equipShield(shield: Armor): void;
+
+    // Helper: Remove armor
+    removeArmor(): void;
+
+    // Helper: Remove shield
+    removeShield(): void;
 }
 
 export { Armor, ArmorType, ArmorClass };

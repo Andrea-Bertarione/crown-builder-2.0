@@ -1,12 +1,13 @@
 type WeaponCategory = 'melee' | 'ranged';
 type WeaponType = 'simple_melee' | 'martial_melee' | 'simple_ranged' | 'martial_ranged';
+type WeaponPrototype = 'longsword' | 'shortsword' | 'rapier' | 'longbow' | 'shortbow' | 'sling' | 'dagger' | 'crossbow' | 'greataxe' | 'handaxe' | 'throwing_axe' | 'greatsword';
 
 interface Weapon {
     id: string;
     name: string;
     category: WeaponCategory;
+    prototype: WeaponPrototype;
     type: WeaponType;
-    isProficient: boolean;  // Does character have proficiency?
 
     // Damage
     damageDice: string;           // e.g., "1d8", "2d6"

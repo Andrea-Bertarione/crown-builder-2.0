@@ -1,5 +1,6 @@
 import type {AbilityKey} from "$lib/types/skills&Saves";
 import type {SpellcastingAbility} from "$lib/data/classes.data";
+import type {WeaponsImp} from "$lib/characterHandler/weapons.svelte";
 
 interface CharacterType {
     // Basic info
@@ -32,11 +33,23 @@ interface CharacterType {
     // Derived from level
     get proficiencyBonus(): number; // $derived
 
+    //Speed
+    speed: number; // $derived: 9 for most races
+
+    //Size
+    size: string; // $derived: Medium for most races
+
+    //languages
+    languages: string[];
+
     // Health
     hitPoints: HitPoints;
 
     // AC
     armorClass: ArmorClass;
+
+    // Weapon
+    weapon: WeaponsImp;
 
     // Skills and saves
     skills: Skill[];
@@ -58,10 +71,6 @@ interface CharacterType {
 
     // Initiative
     get initiativeModifier(): number; // $derived: DEX mod + initiative modifiers from features
-
-    // Adding features dynamically
-    applyFeature(feature: Feature): void;
-    removeFeature(featureId: string): void;
 
     // Getting attacks available now
     get availableAttacks(): Attack[]; // $derived

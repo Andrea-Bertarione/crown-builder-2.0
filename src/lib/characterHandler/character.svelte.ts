@@ -11,6 +11,8 @@ import {ConditionTrackerImpl} from "$lib/characterHandler/condition.svelte";
 import {AbilityScore} from "$lib/characterHandler/abilityScore.svelte";
 import {HitPointsImpl} from "$lib/characterHandler/hitpoints.svelte";
 import {ArmorClassImpl} from "$lib/characterHandler/armorClass.svelte";
+import racesData from "$lib/data/races.data";
+import {WeaponsImp} from "$lib/characterHandler/weapons.svelte";
 
 export class Character implements CharacterType {
     // Basic info
@@ -36,12 +38,12 @@ export class Character implements CharacterType {
 
     // Core stats
     abilityScores: Record<AbilityKey, AbilityScore> = $state.raw({
-        strength: new AbilityScore(10),
-        dexterity: new AbilityScore(10),
-        constitution: new AbilityScore(10),
-        intelligence: new AbilityScore(10),
-        wisdom: new AbilityScore(10),
-        charisma: new AbilityScore(10)
+        strength: new AbilityScore("strength", 10, this),
+        dexterity: new AbilityScore("dexterity", 10, this),
+        constitution: new AbilityScore("constitution", 10, this),
+        intelligence: new AbilityScore("intelligence", 10, this),
+        wisdom: new AbilityScore("wisdom", 10, this),
+        charisma: new AbilityScore("charisma", 10, this)
     });
     asiBonuses: {
         ability: AbilityKey;
@@ -56,8 +58,15 @@ export class Character implements CharacterType {
     // AC
     armorClass: ArmorClass = new ArmorClassImpl(this);
 
+    // Weapons
+    weapon = new WeaponsImp(this);
+
     // Skills and saves
     skills: Skill[] = $state([]);
+    expertise: Skill[] = $state([]);
+    weaponsProficiencies: string[] = $state([]);
+    armorProficiencies: string[] = $state([]);
+    toolProficiencies: string[] = $state([]);
     savingThrows: SavingThrow[] = $state([]);
 
     // Combat
@@ -71,7 +80,20 @@ export class Character implements CharacterType {
     conditions = new ConditionTrackerImpl();
 
     // Features applied to character (race, class, feats, etc.)
-    features: Feature[] = $state([]);
+    features: Feature[] = $derived([...this.race?.features || [], ...this.class?.features || []]);
+
+    // Languages
+    languages: string[] = $derived([...(this.race ? this.race.chosenLanguage : []), ...racesData[this.race ? this.race.name : ""].languages || []]);
+
+    // Speed
+    speed: number = $derived.by(() => {
+        return racesData[this.race ? this.race.name : ""].speed ?? 9;
+    })
+
+    // Size
+    size: string = $derived.by(() => {
+        return racesData[this.race ? this.race.name : ""].size ?? "Medium";
+    })
 
     // Initiative
     initiativeModifier = $derived.by(() => {
@@ -86,72 +108,9 @@ export class Character implements CharacterType {
         return dexMod + featureModifiers;
     });
 
-    // Adding features dynamically
-    applyFeature(feature: Feature): void {
-        this.features.push(feature);
-
-        // If feature modifies ability scores, update them
-        if (feature.modifiers?.abilityScores) {
-            Object.entries(feature.modifiers.abilityScores).forEach(([ability, bonus]) => {
-                const ability_key = ability as AbilityKey;
-                const currentScore = this.abilityScores[ability_key].score;
-                this.abilityScores[ability_key].score = currentScore + (bonus as number);
-            });
-        }
-
-        // If feature has actions, add them
-        if (feature.actions) {
-            this.actions.push(...feature.actions);
-        }
-
-        // If feature has reactions, add them
-        if (feature.reactions) {
-            this.reactions.push(...feature.reactions);
-        }
-    }
-    removeFeature(featureId: string) {
-        this.features = this.features.filter(f => f.id !== featureId);
-    }
-
     // Getting attacks available now
     availableAttacks = $derived.by(() => {
-        if (!this.weapons.length) return [];
-
-        return this.weapons.map(weapon => {
-            // Get ability modifier for this weapon
-            const abilityMod = this.abilityScores[weapon.damageModifier as AbilityKey].modifier;
-
-            // Collect all modifiers on this weapon
-            const weaponBonuses = weapon.modifiers?.total ?? 0;
-            const profBonus = weapon.isProficient ? this.proficiencyBonus : 0;
-
-            // Total attack bonus
-            const attackBonus = abilityMod + profBonus + weaponBonuses;
-
-            return {
-                id: `attack-${weapon.id}`,
-                weapon,
-                attackBonus,
-                rollInfo: {
-                    dice: '1d20',
-                    modifier: attackBonus,
-                    label: `${weapon.name}: 1d20 + ${attackBonus}`,
-                    breakdown: [
-                        { label: `${weapon.damageModifier} modifier`, value: abilityMod },
-                        { label: 'Proficiency bonus', value: profBonus },
-                        { label: 'Weapon modifiers', value: weaponBonuses }
-                    ]
-                },
-                damageRoll: {
-                    dice: weapon.damageDice,
-                    modifier: abilityMod,
-                    label: `${weapon.damageDice} + ${abilityMod}`,
-                    breakdown: [
-                        { label: `${weapon.damageModifier} modifier`, value: abilityMod }
-                    ]
-                }
-            };
-        });
+        return [...this.weapon.weaponsAttacks]
     });
 
     // Track action economy this turn
@@ -169,14 +128,14 @@ export class Character implements CharacterType {
         this.movement = 0;
     }
 
+    baseActions: Action[] = $state([]);
+
     // Now availableActions can check this
     availableActions = $derived.by(() => {
-        return this.actions.filter(a => {
-            if (a.timing === 'action' && this.actionSpent) return false;
-            if (a.timing === 'bonus_action' && this.bonusActionSpent) return false;
-            return !(a.timing === 'reaction' && this.reactionSpent);
+        const base = this.baseActions;
+        const fromFeatures = this.features.flatMap(f => f.actions ?? []);
 
-        });
+        return [...base, ...fromFeatures];
     });
 
     debugLog(): void {

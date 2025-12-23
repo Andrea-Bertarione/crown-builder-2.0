@@ -6,6 +6,10 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
+		"test": "vitest",
+		"test:ui": "vitest --ui",
+		"test:coverage": "vitest --coverage",
+		"test:watch": "vitest --watch",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -16,14 +20,18 @@
 		"@sveltejs/kit": "^2.49.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tailwindcss/vite": "^4.1.17",
+		"@types/node": "^25.0.3",
+		"@vitest/ui": "^4.0.16",
 		"flowbite": "^4.0.1",
 		"flowbite-svelte": "^1.30.1",
 		"flowbite-svelte-icons": "^3.0.1",
+		"jsdom": "^27.3.0",
 		"svelte": "^5.45.6",
 		"svelte-check": "^4.3.4",
 		"tailwindcss": "^4.1.17",
 		"typescript": "^5.9.3",
-		"vite": "^7.2.6"
+		"vite": "^7.2.6",
+		"vitest": "^4.0.16"
 	},
 	"dependencies": {
 		"runed": "^0.37.0",

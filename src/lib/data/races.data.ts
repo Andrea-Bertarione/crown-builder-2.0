@@ -32,7 +32,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Dwarvish'],
         size: 'Medium',
-        speed: 25,
+        speed: 7.5,
         features: ['Darkvision', 'Dwarven Resilience', 'Dwarven Combat Training', 'Tool Proficiencies'],
         subraces: [
             {
@@ -64,7 +64,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Elvish'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Keen Senses', 'Fey Ancestry', 'Trance'],
         subraces: [
             {
@@ -107,7 +107,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Halfling'],
         size: 'Small',
-        speed: 25,
+        speed: 7.5,
         features: ['Lucky', 'Brave', 'Halfling Nimbleness'],
         subraces: [
             {
@@ -144,7 +144,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Extra Language'],
         languageChoices: 1,
     },
@@ -158,7 +158,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Draconic'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Draconic Ancestry', 'Breath Weapon', 'Damage Resistance'],
         subraces: [
             {
@@ -190,7 +190,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Gnomish'],
         size: 'Small',
-        speed: 25,
+        speed: 7.5,
         features: ['Darkvision', 'Gnome Cunning'],
         subraces: [
             {
@@ -223,7 +223,7 @@ const racesData: Record<string, CharacterRaceData> = {
         choiceModifiers: [1, 1],
         languages: ['Common', 'Elvish'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Keen Senses', 'Fey Ancestry', 'Versatility'],
         languageChoices: 1,
     },
@@ -237,7 +237,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Orc'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Menacing', 'Relentless Endurance'],
     },
 
@@ -250,7 +250,7 @@ const racesData: Record<string, CharacterRaceData> = {
         choiceModifiers: [1],
         languages: ['Common', 'Infernal'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Hellish Resistance', 'Infernal Legacy'],
         subraces: [
             {
@@ -292,7 +292,7 @@ const racesData: Record<string, CharacterRaceData> = {
         choiceModifiers: [1],
         languages: ['Common', 'Celestial'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Celestial Resistance', 'Light Bearer'],
         subraces: [
             {
@@ -334,7 +334,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Goblin'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Long-Limbed', 'Powerful Build', 'Surprise Attack'],
     },
 
@@ -347,7 +347,7 @@ const racesData: Record<string, CharacterRaceData> = {
         choiceModifiers: [1],
         languages: ['Common', 'Goblin'],
         size: 'Small',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Nimble Escape', 'Fury of the Small'],
     },
 
@@ -360,7 +360,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Orc'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Aggressive', 'Powerful Build', 'Primal Intuition'],
     },
 
@@ -373,7 +373,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Sylvan'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Hidden Step', 'Powerful Build', 'Firbolg Magic', 'Speech of Beast and Leaf', 'Firblog Weapon Training'],
     },
 
@@ -386,7 +386,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Aarakocra'],
         size: 'Medium',
-        speed: 25,
+        speed: 7.5,
         features: ['Talons', 'Flight', 'Limited Flight'],
     },
 
@@ -399,7 +399,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Aquan'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Shell Defense', 'Natural Armor', 'Shell Ac', 'Claw Attack'],
     },
 
@@ -411,7 +411,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Darkvision', 'Elemental Resistance'],
         subraces: [
             {
@@ -462,7 +462,7 @@ const racesData: Record<string, CharacterRaceData> = {
         },
         languages: ['Common', 'Giant'],
         size: 'Medium',
-        speed: 30,
+        speed: 9,
         features: ['Powerful Build', 'Stone\'s Endurance', 'Athletic', 'Mountain Born'],
     },
 };

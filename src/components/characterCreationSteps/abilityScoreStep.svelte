@@ -2,7 +2,6 @@
     import { Card, Badge, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Select, Input } from "flowbite-svelte";
     import type { Character } from "$lib/characterHandler/character.svelte";
     import type { AbilityKey } from "$lib/types/skills&Saves";
-    import {createComputedAbilities} from "$lib/characterHandler/abilityScore.svelte";
     import { rollDice } from "$lib/diceRoller";
     import { v4 as uuidv4 } from "uuid";
 
@@ -65,9 +64,6 @@
         wisdom: null,
         charisma: null
     });
-
-    // Get computed abilities with all bonuses
-    const computedAbilities = createComputedAbilities(character);
 
     const methodOptions = [
         { value: "Manual" as AbilityScoreMethod, name: "Manual" },
@@ -183,11 +179,11 @@
     });
 
     let hasRaceModifiers = $derived.by(() => {
-        return ABILITY_SCORES.some(ab => computedAbilities[ab].race > 0 || computedAbilities[ab].subrace > 0);
+        return ABILITY_SCORES.some(ab => character.race?.abilityScoreBonuses[ab] > 0 || (character.subrace?.abilityScoreBonuses && character.subrace?.abilityScoreBonuses[ab] > 0));
     });
 
     let hasAsiModifiers = $derived.by(() => {
-        return ABILITY_SCORES.some(ab => computedAbilities[ab].asi > 0);
+        return ABILITY_SCORES.some(ab => character.asiBonuses.length > 0);
     });
 </script>
 
@@ -196,16 +192,9 @@
     <Card size="xl" class="p-8 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border-purple-200 dark:border-purple-900">
         <div class="space-y-2">
             <h1 class="text-4xl font-bold text-purple-600 dark:text-purple-300">Ability Scores</h1>
-            <p class="text-gray-600 dark:text-gray-300">
-                Define your character's natural abilities
-            </p>
         </div>
-    </Card>
-
-    <!-- Method Selection -->
-    <Card size="xl" class="p-8">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl text-purple-600 dark:text-purple-300 font-bold">Score Generation Method</h2>
+            <span></span>
             <Select
                     bind:value={scoreMethod}
                     items={methodOptions}
@@ -302,17 +291,17 @@
                         {#if hasRaceModifiers}
                             <TableBodyCell class="text-center">
                                 <div class="flex flex-col gap-1">
-                                    {#if computedAbilities[ability].race > 0}
+                                    {#if character.race?.abilityScoreBonuses && character.race?.abilityScoreBonuses[ability] > 0}
                                         <Badge color="green">
-                                            +{computedAbilities[ability].race}
+                                            +{character.race?.abilityScoreBonuses[ability]}
                                         </Badge>
                                     {/if}
-                                    {#if computedAbilities[ability].subrace > 0}
+                                    {#if character.subrace?.abilityScoreBonuses && character.subrace?.abilityScoreBonuses[ability] > 0}
                                         <Badge color="blue">
-                                            +{computedAbilities[ability].subrace}
+                                            +{character.subrace?.abilityScoreBonuses[ability]}
                                         </Badge>
                                     {/if}
-                                    {#if computedAbilities[ability].race === 0 && computedAbilities[ability].subrace === 0}
+                                    {#if character.race?.abilityScoreBonuses && character.race?.abilityScoreBonuses[ability] === 0 && character.subrace?.abilityScoreBonuses && character.subrace?.abilityScoreBonuses[ability] === 0}
                                         <Badge color="gray">—</Badge>
                                     {/if}
                                 </div>
@@ -322,27 +311,27 @@
                         <!-- ASI/Feat Bonus -->
                         {#if hasAsiModifiers}
                             <TableBodyCell class="text-center">
-                                {#if computedAbilities[ability].asi > 0}
+                                {#each character.asiBonuses as asiBonus}
                                     <Badge color="yellow">
-                                        +{computedAbilities[ability].asi}
+                                        +{asiBonus.value}
                                     </Badge>
                                 {:else}
                                     <Badge color="gray">—</Badge>
-                                {/if}
+                                {/each}
                             </TableBodyCell>
                         {/if}
 
                         <!-- Total Score -->
                         <TableBodyCell class="text-center">
                             <span class="font-bold text-lg text-purple-600 dark:text-purple-400">
-                                {computedAbilities[ability].total}
+                                {character.abilityScores[ability].computed}
                             </span>
                         </TableBodyCell>
 
                         <!-- Modifier -->
                         <TableBodyCell class="text-center">
                             <Badge color="purple">
-                                {computedAbilities[ability].modifier > 0 ? "+" : ""}{computedAbilities[ability].modifier}
+                                {character.abilityScores[ability].computedModifier > 0 ? "+" : ""}{character.abilityScores[ability].computedModifier}
                             </Badge>
                         </TableBodyCell>
                     </TableBodyRow>

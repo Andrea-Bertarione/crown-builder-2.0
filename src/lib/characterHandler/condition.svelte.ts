@@ -19,6 +19,10 @@ export class ConditionTrackerImpl implements ConditionTracker {
         return this.conditions.some(c => c.name === name);
     }
 
+    tick(): void {
+        this.conditions = this.conditions.map(c => c ? {...c, duration: c.duration - 1} : c);
+    }
+
     get active() {
         return this.conditions.filter(c => {
             // Filter expired conditions
